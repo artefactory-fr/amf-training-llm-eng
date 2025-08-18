@@ -1,0 +1,101 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "amf-training-llm-eng"
+authors = [
+  { name = "Sylvain Cordonnier", email = "sylvain.cordonnier@artefact.com" },
+]
+description = "Training for LLM engineering for AML. Focused on RAG subjects."
+version = "0.0.1"
+readme = "README.md"
+requires-python = "==3.13.*"
+dependencies = [
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.8.3",
+    "ipykernel>=6.29.5",
+    "ipywidgets>=8.1.5",
+    "nbstripout>=0.8.1",
+    "pre-commit>=4.2.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.11.2",
+    "sqlfluff>=3.3.1",
+    "uv>=0.6.9",
+]
+
+
+[tool.setuptools]
+packages = ["lib"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
+]
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "W",
+  "F",
+  "I",
+  "N",
+  "D",
+  "ANN",
+  "Q",
+  "RET",
+  "ARG",
+  "PTH",
+  "PD",
+] # See: https://beta.ruff.rs/docs/rules/
+ignore = [
+  "D100",
+  "D101",
+  "D103",
+  "D106",
+  "D203",
+  "D205",
+  "D213",
+  "E722",
+  "ANN401",
+  "PTH123",
+  "RET504",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["lib"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.sqlfluff]
+max_line_length = 120
+dialect = "bigquery"
+
+[tool.sqlfluff.capitalisation]
+keywords = "upper"
+
+[tool.bandit.assert_used]
+skips = ['*_test.py', '*/test_*.py']
