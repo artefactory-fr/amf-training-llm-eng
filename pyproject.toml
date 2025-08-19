@@ -12,6 +12,15 @@ version = "0.0.1"
 readme = "README.md"
 requires-python = "==3.13.*"
 dependencies = [
+    "grandalf>=0.8",
+    "langchain>=0.3.27",
+    "langchain-chroma>=0.2.5",
+    "langchain-community>=0.3.27",
+    "langchain-core>=0.3.74",
+    "langchain-openai>=0.3.30",
+    "langgraph>=0.6.5",
+    "pypdf>=6.0.0",
+    "python-dotenv>=1.1.1",
 ]
 
 [dependency-groups]

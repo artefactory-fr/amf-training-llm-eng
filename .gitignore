@@ -151,3 +151,9 @@ requirements-developer.txt
 
 # qodo
 .qodo
+
+# data
+/data
+
+# database
+/database
