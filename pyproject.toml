@@ -17,10 +17,17 @@ dependencies = [
     "langchain-chroma>=0.2.5",
     "langchain-community>=0.3.27",
     "langchain-core>=0.3.74",
+    "langchain-docling>=1.0.0",
     "langchain-openai>=0.3.30",
     "langgraph>=0.6.5",
-    "pypdf>=6.0.0",
+    "llama-parse>=0.6.60",
+    "pdf2image>=1.17.0",
+    "pi-heif>=1.1.0",
+    "pymupdf>=1.26.3",
     "python-dotenv>=1.1.1",
+    "unstructured>=0.18.13",
+    "unstructured-inference>=1.0.5",
+    "unstructured-pytesseract>=0.3.15",
 ]
 
 [dependency-groups]
@@ -85,6 +92,7 @@ ignore = [
   "D205",
   "D213",
   "E722",
+  "E501",
   "ANN401",
   "PTH123",
   "RET504",
