@@ -1,0 +1,2 @@
+MAX_AGENT_RETRIES = 50
+VECTOR_STORE_PATH = "database"
