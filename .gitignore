@@ -157,3 +157,6 @@ requirements-developer.txt
 
 # database
 /database
+
+#ressources
+/ressources

@@ -1,13 +1,20 @@
 from pathlib import Path
 from typing import List
 
+import chromadb
 import nltk
 from langchain.schema import Document
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_openai import AzureChatOpenAI
+from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from loguru import logger
 from nltk.tokenize import sent_tokenize
 
-from lib.config import MAX_AGENT_RETRIES
+from lib.config import (
+    MAX_AGENT_RETRIES,
+    VECTOR_STORE_PATH,
+)
 from lib.prompts import IT_AGENT_PROMPT, RC_AGENT_PROMPT
 
 nltk.download("punkt")
@@ -23,8 +30,114 @@ def load_documents(source_directory: str) -> List[Document]:
     documents = []
     pdf_files = list(Path(source_directory).glob("*.pdf"))
     for pdf in pdf_files:
-        documents += PyPDFLoader(str(pdf)).load()
+        documents += PyPDFLoader(pdf).load()
     return documents
+
+
+def split_documents_basic(
+    documents: List[Document], chunk_size: int, include_linear_index: bool = False
+) -> List[Document]:
+    """Splits documents into chunks of specified size using
+    recursive character splitter
+    If specified, adds a linear index that encodes the sequential
+    of the chunks within each document, made to handle multiple documents.
+
+    Args:
+        documents (List[Document]): list of langchain document objects
+        chunk_size (int): size of chunks
+        include_linear_index (bool): whether to include linear index
+    """
+    splitted_text = RecursiveCharacterTextSplitter(chunk_size=chunk_size).split_documents(documents)
+    if include_linear_index:
+        for i in range(len(splitted_text)):
+            if (i == 0) or (splitted_text[i - 1].metadata["source"] != splitted_text[i].metadata["source"]):
+                splitted_text[i].metadata["linear_index"] = 0
+            else:
+                splitted_text[i].metadata["linear_index"] = splitted_text[i - 1].metadata["linear_index"] + 1
+    return splitted_text
+
+
+def drop_document_duplicates(documents: List[Document]) -> List[Document]:
+    """Simply removes duplicates from a list of Langchain Documents.
+
+    Args:
+        documents (List[Document]): list of docs
+    """
+    new_docs = []
+    doc_contents = []
+    for doc in documents:
+        if doc.page_content not in doc_contents:
+            doc_contents.append(doc.page_content)
+            new_docs.append(doc)
+    return new_docs
+
+
+def load_vector_store(
+    embedding: AzureOpenAIEmbeddings, collection_name: str, vs_location: str = VECTOR_STORE_PATH
+) -> Chroma:
+    if (Path(vs_location) / "chroma.sqlite3").exists():
+        temp_client = chromadb.PersistentClient(vs_location)
+        try:
+            temp_client.get_collection(name=collection_name)
+            chroma_db = Chroma(
+                collection_name=collection_name,
+                persist_directory=vs_location,
+                embedding_function=embedding,
+            )
+            logger.info(f"Successfully loaded vector store from `{vs_location}` with collection `{collection_name}`")
+            return chroma_db
+        except ValueError:
+            raise ValueError("No Collection with this name found")
+    else:
+        raise FileNotFoundError("No Chroma vector store found")
+
+
+def build_vector_store(
+    documents: List[Document],
+    embedding: AzureOpenAIEmbeddings,
+    collection_name: str,
+    vs_location: str = VECTOR_STORE_PATH,
+    distance_function: str = "cosine",
+    erase_existing: bool = False,
+) -> Chroma:
+    """Creates a persistent vector store from a list of documents.
+
+    Args:
+        documents (List[Document]): list of chunks
+        embedding (ModelSetup): embedding model
+        collection_name (str): Name of the collection to create.
+        vs_location (str, optional): Location of created vector store.
+        Defaults to VECTOR_STORE_PATH.
+        distance_function (str, optional): Distance function to use.
+        Defaults to "cosine".
+        erase_existing (bool, optional): Whether to erase existing vector store.
+    """
+    try:
+        load_vector_store(
+            embedding=embedding,
+            collection_name=collection_name,
+            vs_location=vs_location,
+        )
+        logger.info("""Vector store and collection already exists.""")
+        if erase_existing:
+            logger.info(f"""parameters `erase_existing` is set to `{erase_existing}` > will perform deletion""")
+            temp_client = chromadb.PersistentClient(vs_location)
+            temp_client.delete_collection(collection_name)
+            logger.info("Successfully deleted existing collection")
+            raise ValueError("Creating new collection")
+
+    except (FileNotFoundError, ValueError) as e:
+        Chroma.from_documents(
+            documents=documents,
+            embedding=embedding,
+            collection_name=collection_name,
+            persist_directory=vs_location,
+            collection_metadata={"hnsw:space": distance_function},
+        )
+        if isinstance(e, FileNotFoundError):
+            logger.info("No existing vector store, created new with collection")
+        elif isinstance(e, ValueError):
+            logger.info("Found vector store but not collection, created new collection")
 
 
 class AgentChunker:
