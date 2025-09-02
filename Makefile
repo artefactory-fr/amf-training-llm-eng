@@ -21,3 +21,7 @@ install_precommit:
 .PHONY: run_app
 run_app:
 	@uv run streamlit run app/main.py --server.runOnSave=true
+
+# help: run_tests                      - Run all tests
+run_tests:
+	@uv run pytest -v
