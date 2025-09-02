@@ -140,6 +140,20 @@ def build_vector_store(
             logger.info("Found vector store but not collection, created new collection")
 
 
+def get_all_documents(vector_store: Chroma) -> List[Document]:
+    """Extracts all the documents from a chroma vector databse, in their original format.
+
+    Args:
+        vector_store (Chroma): vector store
+    """
+    collection = vector_store.get()
+    document_list = []
+    for i in range(len(collection["ids"])):
+        doc = Document(page_content=collection["documents"][i], metadata=collection["metadatas"][i])
+        document_list.append(doc)
+    return document_list
+
+
 class AgentChunker:
     """Class that instantiates a chunking method that uses an
     LLM agent to decide where to separate the text
