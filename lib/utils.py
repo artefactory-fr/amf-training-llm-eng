@@ -3,6 +3,7 @@ from typing import List
 
 import chromadb
 import nltk
+from chromadb.errors import NotFoundError
 from langchain.schema import Document
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
@@ -126,7 +127,7 @@ def build_vector_store(
             logger.info("Successfully deleted existing collection")
             raise ValueError("Creating new collection")
 
-    except (FileNotFoundError, ValueError) as e:
+    except (ValueError, NotFoundError) as e:
         Chroma.from_documents(
             documents=documents,
             embedding=embedding,
@@ -134,7 +135,7 @@ def build_vector_store(
             persist_directory=vs_location,
             collection_metadata={"hnsw:space": distance_function},
         )
-        if isinstance(e, FileNotFoundError):
+        if isinstance(e, NotFoundError):
             logger.info("No existing vector store, created new with collection")
         elif isinstance(e, ValueError):
             logger.info("Found vector store but not collection, created new collection")

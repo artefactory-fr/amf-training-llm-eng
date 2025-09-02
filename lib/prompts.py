@@ -147,3 +147,12 @@ Your response should contain ONLY the step-back query,
 with no additional text or explanation.
 
 Step-back query:"""
+
+RERANKER_AGENT_PROMPT = """
+You are an expert in information retrieval. Given the user query: '{query}',
+rank the following documents in order of relevance to the query.
+Each document is listed below with its index number.\n\n
+{context}\n\n
+Please return the indices of the documents in order of relevance, with
+the most relevant first.
+Return only the sequence of indices separated by commas (e.g., '1, 3, 2')."""
