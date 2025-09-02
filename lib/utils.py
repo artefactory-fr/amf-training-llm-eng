@@ -99,7 +99,7 @@ def build_vector_store(
     vs_location: str = VECTOR_STORE_PATH,
     distance_function: str = "cosine",
     erase_existing: bool = False,
-) -> Chroma:
+) -> None:
     """Creates a persistent vector store from a list of documents.
 
     Args:
