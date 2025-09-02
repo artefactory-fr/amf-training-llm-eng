@@ -1,6 +1,7 @@
 import os
 
 from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
+from openai import AzureOpenAI
 
 embeddings = AzureOpenAIEmbeddings(
     model=os.getenv("EMBEDDINGS_AZURE_OPENAI_MODEL_NAME"),
@@ -20,4 +21,10 @@ llm = AzureChatOpenAI(
     max_tokens=None,
     timeout=None,
     max_retries=2,
+)
+
+llm_openai = AzureOpenAI(
+    api_key=os.getenv("LLM_AZURE_OPENAI_API_KEY"),
+    api_version=os.getenv("LLM_AZURE_OPENAI_API_VERSION"),
+    azure_endpoint=os.getenv("LLM_AZURE_OPENAI_ENDPOINT"),
 )
