@@ -12,6 +12,7 @@ version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "giskard[llm]>=2.18.0",
     "grandalf>=0.8",
     "langchain>=0.3.27",
     "langchain-chroma>=0.2.5",
@@ -33,6 +34,7 @@ dependencies = [
     "pymupdf>=1.26.3",
     "pytest>=8.4.1",
     "python-dotenv>=1.1.1",
+    "ragas>=0.3.3",
     "ragatouille<0.0.10",
     "rank-bm25>=0.2.2",
     "unstructured>=0.18.13",
