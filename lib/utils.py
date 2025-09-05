@@ -127,7 +127,7 @@ def build_vector_store(
             logger.info("Successfully deleted existing collection")
             raise ValueError("Creating new collection")
 
-    except (ValueError, NotFoundError) as e:
+    except (ValueError, FileNotFoundError, NotFoundError) as e:
         Chroma.from_documents(
             documents=documents,
             embedding=embedding,
@@ -135,10 +135,10 @@ def build_vector_store(
             persist_directory=vs_location,
             collection_metadata={"hnsw:space": distance_function},
         )
-        if isinstance(e, NotFoundError):
-            logger.info("No existing vector store, created new with collection")
-        elif isinstance(e, ValueError):
-            logger.info("Found vector store but not collection, created new collection")
+        if isinstance(e, FileNotFoundError):
+            logger.info("No existing vector store, created new collection.")
+        elif isinstance(e, (NotFoundError, ValueError)):
+            logger.info("Found vector store but no collection, created new collection.")
 
 
 def get_all_documents(vector_store: Chroma) -> List[Document]:
