@@ -17,11 +17,7 @@ install_precommit:
 	@uv run pre-commit install -t pre-commit
 	@uv run pre-commit install -t pre-push
 
-# help: run_app                        - Run streamlit app
-.PHONY: run_app
-run_app:
-	@uv run streamlit run app/main.py --server.runOnSave=true
 
-# help: run_tests                      - Run all tests
+# help: run_tests                              - Run all tests
 run_tests:
 	@uv run pytest -v

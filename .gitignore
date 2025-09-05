@@ -152,12 +152,19 @@ requirements-developer.txt
 # qodo
 .qodo
 
-# data
-/data
+# Ignore all contents of /data and /database
+/data/*
+/database/*
+# But keep the .gitkeep files
+!/data/.gitkeep
+!/database/.gitkeep
 
-# database
-/database
+# Ignore all contents of /data and /database
+/data/*
+/database/*
+# But keep the .gitkeep files
+!/data/.gitkeep
+!/database/.gitkeep
 
 #ressources
-/ressources
 /output
