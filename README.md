@@ -29,6 +29,8 @@ Each notebook combines theory with examples to help you learn step by step how t
 ### Hands-on 6 — LLMOps
 - **6_llmops_pipeline.ipynb**: Tracing setup and building an evaluation pipeline.
 
+*Note:pre-run notebooks are availbale [here](https://drive.google.com/drive/folders/1dxMQa1CxusHRwgo1yIm2x9GqezF2BFLb) in .html formats*
+
 ---
 
 ## Installation
