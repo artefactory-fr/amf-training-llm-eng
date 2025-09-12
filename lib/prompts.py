@@ -156,3 +156,8 @@ Each document is listed below with its index number.\n\n
 Please return the indices of the documents in order of relevance, with
 the most relevant first.
 Return only the sequence of indices separated by commas (e.g., '1, 3, 2')."""
+
+SYSTEM_TEMPLATE = """Answer the question based only on the following context:
+{context}
+Question: {question}
+Answer: """

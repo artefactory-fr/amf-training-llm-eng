@@ -27,7 +27,7 @@ Each notebook combines theory with examples to help you learn step by step how t
 - **5_guardrails_strategies.ipynb**: Guardrails, metrics (faithfulness, relevance), evaluation with Ragas, redteaming.
 
 ### Hands-on 6 — LLMOps
-- **6_llmops_pipeline.ipynb**: Tracing setup and building an evaluation pipeline.
+- **6_monitoring_evaluation.ipynb**: Tracing setup and building an evaluation pipeline.
 
 *Note:pre-run notebooks are availbale [here](https://drive.google.com/drive/folders/1dxMQa1CxusHRwgo1yIm2x9GqezF2BFLb) in .html formats*
 
@@ -39,7 +39,13 @@ Each notebook combines theory with examples to help you learn step by step how t
 - Python 3.12 (or compatible version as specified in `pyproject.toml`)
 - Have access to an Azure deployment for both LLM and embeddings models.
 - For running the noteooks **2_1_parsing_strategies.ipynb**, have a LlamaParse API key > go to https://cloud.llamaindex.ai/ sign in and create one.
-- Download the data used in the notebooks from [data](https://drive.google.com/drive/folders/1IAUeIMMfupJRQdjOSg0w-CFwoS5uo6Od) and put the content into the `data/` folder at the root of the project.
+- Download the data/images used in the notebooks from [data](https://drive.google.com/drive/folders/1IAUeIMMfupJRQdjOSg0w-CFwoS5uo6Od) and put the content into the `data/` folder at the root of the project.
+- For running the noteooks **6_monitoring_evaluation.ipynb**, To begin, you need to configure your Langfuse project. Follow [these instructions](https://langfuse.com/docs/get-started) to get started.
+
+> Next, update your `.env` file with the following credentials:\
+> `LANGFUSE_PUBLIC_KEY`=pk-lf-...\
+> `LANGFUSE_SECRET_KEY`=sk-lf-...\
+> `LANGFUSE_HOST`=https://cloud.langfuse.com
 
 ### Installation Steps
 1. Clone the repository:
@@ -55,7 +61,10 @@ Each notebook combines theory with examples to help you learn step by step how t
 
 3. Set up environment variables:
    - Create a `.env` file in the root directory.
-   - Fill the following variables with your Azure OpenAI credentials (as described in `.env.example`)
+   - Fill the following variables just as described in `.env.example`. See previous prerequisites for more details.
+     - Azure credentials for LLM and embeddings models.
+     - LLAMA_PARSE_API_KEY for LlamaParse.
+     - Langfuse credentials for for your langfuse instance
 
 ---
 
